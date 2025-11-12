@@ -12,56 +12,58 @@ timezone = pytz.timezone('America/Sao_Paulo')
 # Diretório de download para GitHub Actions
 download_dir = "/tmp"
 os.makedirs(download_dir, exist_ok=True)
+ops_id = os.environ.get('OPS_ID')
+ops_senha = os.environ.get('OPS_SENHA')
 
 def login(page):
-    page.goto("https://spx.shopee.com.br/")
-    page.wait_for_selector('xpath=//*[@placeholder="Ops ID"]', timeout=15000)
-    page.fill('xpath=//*[@placeholder="Ops ID"]', 'Ops105579')
-    page.fill('xpath=//*[@placeholder="Senha"]', '@Shopee123')
-    page.click('xpath=/html/body/div[1]/div/div[2]/div/div/div[1]/div[3]/form/div/div/button')
-
-    page.wait_for_timeout(15000)
-    try:
-        page.click('css=.ssc-dialog-close', timeout=5000)
-    except:
-        print("Nenhum pop-up foi encontrado.")
-        page.keyboard.press("Escape")
+            await page.goto("https://spx.shopee.com.br/")
+            await page.wait_for_selector('xpath=//*[@placeholder="Ops ID"]', timeout=15000)
+            await page.locator('xpath=//*[@placeholder="Ops ID"]').fill(ops_id)
+            await page.locator('xpath=//*[@placeholder="Senha"]').fill(ops_senha)
+            await page.locator('xpath=/html/body/div[1]/div/div[2]/div/div/div[1]/div[3]/form/div/div/button').click()
+            await page.wait_for_timeout(15000)
+            try:
+                await page.locator('.ssc-dialog-close').click(timeout=5000)
+            except:
+                print("Nenhum pop-up de diálogo foi encontrado.")
+                await page.keyboard.press("Escape")
 
 def get_data(page):
     data = []
     try:
-        d1 = "SoC_SP_Louveira"
-        d2 = "SOC_Received"
+        d1 = "FM Hub_SP_Franca_Dst Ind Antonio"
+        d2 = "FMHub_Received"
 
         # Acessa a página
-        page.goto("https://spx.shopee.com.br/#/orderTracking", timeout=60000)
+        page.goto("https://spx.shopee.com.br/#/orderManagementForFmHub", timeout=60000)
 
         # Preenche o primeiro campo
         time.sleep(5)
-        input1 = page.locator('xpath=/html[1]/body[1]/div[1]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/div[1]/div[6]/form[1]/div[8]/div[1]/span[1]/span[1]/div[1]/div[1]/div[1]/span[1]/input[1]')
+        input1 = page.locator('xpath=/html[1]/body[1]/div[1]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/div[2]/div[2]/form[1]/div[9]/div[1]/span[1]/span[1]/div[1]/div[1]/div[1]/span[2]/input[1]')
         input1.click()
         input1.fill(d1)
         time.sleep(5)
         
-        page.locator('xpath=/html[1]/body[1]/span[6]/div[1]/div[1]/div[1]/ul[1]/div[1]/div[1]/li[1]').click()
+        page.locator('xpath=/html[1]/body[1]/span[1]/div[1]/div[1]/div[1]/ul[1]/li[1]').click()
        
-        page.wait_for_timeout(2000)
-        page.locator('xpath=/html/body/div[1]/div/div[2]/div[1]/div[1]/span[2]/span[1]/span').click()
+        
+        # page.wait_for_timeout(2000)
+        # page.locator('xpath=/html/body/div[1]/div/div[2]/div[1]/div[1]/span[2]/span[1]/span').click()
 
         time.sleep(5)
         # Preenche o segundo campo
-        input2 = page.locator('xpath=/html[1]/body[1]/div[1]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/div[1]/div[6]/form[1]/div[21]/div[1]/span[1]/span[1]/div[1]/div[1]/div[1]/span[1]/input[1]')
+        input2 = page.locator('xpath=/html[1]/body[1]/div[1]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/div[2]/div[2]/form[1]/div[1]/div[1]/span[1]/span[1]/div[1]/div[1]/div[1]/span[1]/input[1]')
         input2.click()
         input2.fill(d2)
         time.sleep(5)
 
-        page.locator('xpath=/html[1]/body[1]/span[4]/div[1]/div[1]/div[1]/ul[1]/li[1]/span[1]/b[1]').click()
+        page.locator('xpath=/html[1]/body[1]/span[1]/div[1]/div[1]/div[1]/ul[1]/li[1]').click()
         time.sleep(5)
 
-        page.locator('xpath=/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/span[2]/span[1]/span[1]').click()
+        #page.locator('xpath=/html[1]/body[1]/div[1]/div[1]/div[2]/div[1]/div[1]/span[2]/span[1]/span[1]').click()
 
         # Clica no botão de pesquisa
-        page.locator('xpath=/html/body/div[1]/div/div[2]/div[2]/div/div/div[1]/div/div[6]/form/div[25]/button[1]').click()
+        page.locator('xpath=/html[1]/body[1]/div[1]/div[1]/div[2]/div[2]/div[1]/div[1]/div[1]/div[2]/div[2]/form[1]/div[14]/button[1]').click()
         page.wait_for_timeout(10000)
 
         # Coleta o dado
