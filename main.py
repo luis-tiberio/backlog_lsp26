@@ -12,13 +12,14 @@ timezone = pytz.timezone('America/Sao_Paulo')
 # Diretório de download para GitHub Actions
 download_dir = "/tmp"
 os.makedirs(download_dir, exist_ok=True)
-
+ops_id = os.environ.get('OPS_ID')
+ops_senha = os.environ.get('OPS_SENHA')
 
 def login(page):
     page.goto("https://spx.shopee.com.br/")
     page.wait_for_selector('xpath=//*[@placeholder="Ops ID"]', timeout=15000)
-    page.fill('xpath=//*[@placeholder="Ops ID"]', 'Ops136360')
-    page.fill('xpath=//*[@placeholder="Senha"]', '@Shopee123')
+    page.locator('xpath=//*[@placeholder="Ops ID"]').fill(ops_id)
+    page.locator('xpath=//*[@placeholder="Senha"]').fill(ops_senha)
     page.click('xpath=/html/body/div[1]/div/div[2]/div/div/div[1]/div[3]/form/div/div/button')
 
     page.wait_for_timeout(15000)
