@@ -30,4 +30,7 @@ jobs:
           playwright install chromium
 
       - name: Executar o script
-        run: python main.py
+        run: xvfb-run python main.py
+        env: # <--- ALTERAÇÃO ADICIONADA AQUI
+          OPS_ID: ${{ secrets.OPS_ID }}
+          OPS_SENHA: ${{ secrets.OPS_SENHA }}      
